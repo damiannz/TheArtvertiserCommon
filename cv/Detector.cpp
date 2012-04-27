@@ -61,7 +61,7 @@ void Detector::setup(string _model, ofVideoGrabber & _video, const vector<ofPoin
 	model = _model;
 	video = &_video;
 	srcQuad = _srcQuad;
-
+	
 	fern.setUseTexture(false);
 	fern.setMode('5');
 	fern.setMode('0');

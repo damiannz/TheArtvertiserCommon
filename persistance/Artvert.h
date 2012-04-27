@@ -52,7 +52,7 @@ public:
 	string getTitle( ofFile & whichArtwork ) { return title[whichArtwork]; }
 	string getArtist( ofFile & whichArtwork ) { return artist[whichArtwork]; }
 
-	vector<ofFile> getArtverts();
+	vector<ofFile> getArtverts( bool ignoreDefault = false );
 	
 	
 

@@ -52,6 +52,9 @@ Artvert::Artvert(string _uid,string folder)
 		
 	}
 	
+	if ( advertName == "" )
+		advertName = uid;
+	
 	updateArtworks();
 
 	
@@ -132,6 +135,9 @@ void Artvert::setUID(const string & _uid){
 			
 		}
 	}
+	
+	if ( advertName == "" )
+		advertName = uid;
 	
 	updateArtworks();
 	
@@ -233,17 +239,29 @@ vector<ofPoint> Artvert::getROI(){
 
 }
 
-vector<ofFile> Artvert::getArtverts(){
-	ofDirectory default_artverts_dir("artverts/");
-	default_artverts_dir.allowExt("jpg");
-	default_artverts_dir.allowExt("png");
-	default_artverts_dir.allowExt("bmp");
-	default_artverts_dir.listDir();
-	vector<ofFile> artverts = default_artverts_dir.getFiles();
-
+vector<ofFile> Artvert::getArtverts( bool ignoreDefault ){
+	vector<ofFile> artverts;
+	
+	if ( !ignoreDefault )
+	{
+		ofDirectory default_artverts_dir("artverts/");
+		default_artverts_dir.allowExt("jpg");
+		default_artverts_dir.allowExt("png");
+		default_artverts_dir.allowExt("bmp");
+		default_artverts_dir.allowExt("avi");
+		default_artverts_dir.allowExt("mov");
+		default_artverts_dir.allowExt("mp4");
+		default_artverts_dir.listDir();
+		artverts = default_artverts_dir.getFiles();
+	}
+	
 	ofDirectory artverts_dir("artverts/" + getUID());
 	artverts_dir.allowExt("jpg");
 	artverts_dir.allowExt("png");
+	artverts_dir.allowExt("avi");
+	artverts_dir.allowExt("mov");
+	artverts_dir.allowExt("bmp");
+	artverts_dir.allowExt("mp4");
 	artverts_dir.listDir();
 	vector<ofFile> own_artverts = artverts_dir.getFiles();
 	artverts.insert(artverts.end(),own_artverts.begin(),own_artverts.end());
@@ -260,7 +278,10 @@ void Artvert::save(){
 	int artvert = PersistanceEngine::artverts().addTag("artvert");
 	PersistanceEngine::artverts().addAttribute("artvert","uid",uid,artvert);
 	PersistanceEngine::artverts().addAttribute("artvert","alias",aliasUID,artvert);
-	PersistanceEngine::artverts().addAttribute("artvert","advertName", advertName, artvert );
+	if ( advertName != uid )
+		PersistanceEngine::artverts().addAttribute("artvert","advertName", advertName, artvert );
+	else
+		PersistanceEngine::artverts().addAttribute("artvert","advertName", "", artvert );
 	PersistanceEngine::save();
 	ofLogNotice("Artvert","artvert "+uid+" saved");
 }
